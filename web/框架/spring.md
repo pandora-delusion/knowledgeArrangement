@@ -32,6 +32,8 @@ Spring MVC：提供面向Web应用的Model-View-Controller实现。
 
 ### Spring IoC的概念
 
+Spring实现依赖注入的手段是控制反转（IoC）
+
 核心理念是**IoC（控制反转）**和**AOP（面向切面编程）**
 
 容纳Bean的是Spring所提供的IoC容器
@@ -48,7 +50,7 @@ Spring会提供IoC容器来管理对应的资源
 
 基于降低开发难度，对模块解耦，同时也更加有利于测试的原则。Spring IoC理念在各种JavaEE开发者中广泛应用
 
-#### Spring IoC容器
+#### Spring IoC容器  
 
 SpringIoC容器的设计主要是基于BeanFactory和ApplicationContext两个接口，其中ApplicationContext是BeanFactory的子接口之一
 
