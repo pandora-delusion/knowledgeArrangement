@@ -736,9 +736,11 @@ Twemproxy是Twitter维护的（缓存）代理系统，代理Memcached的ASCII�
 
 但偶尔重新启动是必须的，如为升级 Redis 程序到新的版本，或者当你需要修改某些目前 CONFIG 命令还不支持的配置参数的时候。
 
-### Jedis连接池
+### Jedis连接池(JedisPool)
 
 Jedis实例不是线程安全的,所以不可以多个线程共用一个Jedis实例，但是创建太多的实现也不好因为这意味着会建立很多sokcet连接。  JedisPool是一个线程安全的网络连接池。可以用JedisPool创建一些可靠Jedis实例，可以从池中获取Jedis实例，使用完后再把Jedis实例还回JedisPool。这种方式可以避免创建大量socket连接并且会实现高效的性能. 
+
+
 
 ### 基于Redission的分布式锁
 

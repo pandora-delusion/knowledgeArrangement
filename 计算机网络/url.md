@@ -32,7 +32,7 @@
 
 ##### 三次握手
 
-![三次握手](F:\mycode\knowledgeArrangement\计算机网络\three_hands.png)
+![三次握手](.\three_hands.png)
 
 - 客户端选择一个初始序列号（ISN），将设置了SYN位的封包发送给服务器端，表明自己要建立连接。
 - 服务端受到封包，如果可以建立连接，那么服务端将选择自己的初始序列号，设置SYN位，然后设置ACK位，将客户端ISN+1复制到ack域，表明自己收到了客户端的第一个封包。
@@ -44,7 +44,7 @@
 
 ##### 四次握手
 
-![四次握手](F:\mycode\knowledgeArrangement\计算机网络\four_hands.jpg)
+![四次握手](.\four_hands.jpg)
 
 要关闭连接的一方Client发送一个FIN 包，表示自己的数据已经发送完了；Server发送ACK包确认这个FIN包，但此时可能并不会关闭；Server确认数据发送完毕，发送一个FIN包，表示自己的数据发送结束，Client发送ACK包确认。
 

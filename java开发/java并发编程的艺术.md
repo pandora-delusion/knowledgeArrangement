@@ -393,6 +393,15 @@ protected final boolean tryAcquire(int acquires) {
 * ReentrantLock支持公平锁和非公平锁，而synchorized只支持非公平锁
 * synchronized 依赖于 JVM 而 ReenTrantLock 依赖于AQS实现
 
+### Lock接口参数
+
+- void lock()：获得锁，得不到就休眠知道获得锁
+- void lockInterruptibly()：和lock()一样，但可在休眠时被中断，会抛出中断异常并且清空中断状态
+- boolean tryLock()：调用时锁空闲时获得锁返回true，若无法获得锁就立即返回false（获得锁时当前锁未被锁定，得不到锁不会尝试解锁）
+- boolean tryLock(long time, TimeUnit unit)：和tryLock()一样，但加了时间限制，在给定时间内返回结果， 不想tryLock要立即返回
+- void unLock()：解锁
+- Condition newCondition()：返回一个关联到锁对象的Condition对象，在等待条件前锁必须会被当前线程持有，调用Condition.await()方法后将原子性地释放锁（在线程等锁或调用wait()方法之前）
+
 ### Lock接口提供的而synchronized不具备的特性：
 
 * 可轮询锁

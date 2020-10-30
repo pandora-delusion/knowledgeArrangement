@@ -47,6 +47,48 @@ Java 7中运行时常量池已经移到了堆中。Java 8 移除了方法区，�
 + 元数据区（方法区的实现）：Java7以及之前是使用的永久代来实现方法区（永久代就是HotSpot虚拟机对虚拟机规范中方法区的一种实现方式。），大小是在启动时固定的。Java8中用元空间替代了永久代，元空间并不在虚拟机中，而是使用本地内存，并且大小可以是自动增长的，这样减少了OOM的可能性。元空间存储JIT即时编译后的native代码，可能还存在短指针数据区CCS。**元数据区的大小默认无限制，根据内存大小**动态改变，`-XX:MetaspaceSize`分配元数据区的初始大小，`-XX:MaxMetaspaceSize`元数据区的最大值，超过此值时会GC，默认无限制
 + 堆区: Java7之后运行时常量池和静态变量从方法区移到这里，为Java8移除永久代的做好准备
 
+### JVM常用指令
+
+##### JVM堆大小的设置
+
+```
+-Xmx 10240m -Xms 10240m -Xmn5120m -XXSurvivorRatio=3
+```
+
+解析：
+
+-Xmx：最大堆大小
+
+-Xms：初始堆大小
+
+-Xmn：年轻代最大大小
+
+-XXSurvivorRatio：年轻代中Eden区与Survivor区的大小比值
+
+年轻代5120m， Eden：Survivor=3，Survivor区大小=1024m（Survivor区有两个，即将年轻代分为5份，每个Survivor区占一份），总大小为2048m。
+
+-Xms初始堆大小即最小内存值为10240m。
+
+下面来解释下几个重要参数的含义：
+
+-Xms 和 -Xmx (-XX:InitialHeapSize 和 -XX:MaxHeapSize)：指定JVM初始占用的堆内存和最大堆内存。JVM也是一个软件，也必须要获取本机的物理内
+
+存，然后JVM会负责管理向操作系统申请到的内存资源。JVM启动的时候会向操作系统申请 -Xms 设置的内存，JVM启动后运行一段时间，如果发现内存空间
+
+不足，会再次向操作系统申请内存。JVM能够获取到的最大堆内存是-Xmx设置的值。
+
+-XX:NewSize 和 -Xmn(-XX:MaxNewSize)：指定JVM启动时分配的新生代内存和新生代最大内存。
+
+-XX:SurvivorRatio：设置新生代中1个Eden区与1个Survivor区的大小比值。在hotspot虚拟机中，新生代 = 1个Eden + 2个Survivor。如果新生代内存是10M，SurvivorRatio=8，那么Eden区占8M，2个Survivor区各占1M。
+
+-XX:NewRatio：指定老年代/新生代的堆内存比例。在hotspot虚拟机中，堆内存 = 新生代 + 老年代。如果-XX:NewRatio=4表示年轻代与年老代所占比值为1:4,年轻代占整个堆内存的1/5。在设置了-XX:MaxNewSize的情况下，-XX:NewRatio的值会被忽略，老年代的内存=堆内存 - 新生代内存。老年代的最大内存 = 堆内存 - 新生代 最大内存。
+
+-XX:OldSize：设置JVM启动分配的老年代内存大小，类似于新生代内存的初始大小-XX:NewSize。
+
+-XX:PermSize 和 -XX:MaxPermSize：指定JVM中的永久代(方法区)的大小。可以看到：永久代不属于堆内存，堆内存只包含新生代和老年代。
+
+可以发现：堆内存、新生代内存、老年代内存、永久代内存，都有一个初始内存，还有一个最大内存。
+
 ### 为什么移除永久代
 
 + 由于永久代内存经常不够用或发生内存泄露，爆出异常 java.lang.OutOfMemoryError: PermGen
