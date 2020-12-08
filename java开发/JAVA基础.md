@@ -242,3 +242,43 @@ public final void setDaemon(boolean on);
 #### 守护线程的应用场景
 
 ​	Web服务器中的Servlet，在容器启动时，后台都会初始化一个服务线程，即调度线程，负责处理http请求，然后每个请求过来，调度线程就会从线程池中取出一个工作者线程来处理该请求，从而实现并发控制的目的。也就是说，一个实际应用在Java的线程池中的调度线程。
+
+### ArrayList的toArray实现
+
+```Java
+public Object[] toArray() {
+    return Arrays.copyOf(elementData, size);
+}
+
+public <T> T[] toArray(T[] a) {
+    if (a.length < size)
+        // 如果a的长度小于源数组大小，则创建新数组
+        return (T[]) Arrays.copyOf(elementData, size, a.getClass());
+    // 否则就地拷贝，多余的部分用null填充
+    System.arraycopy(elementData, 0, a, 0, size);
+    if (a.length > size)
+        a[size] = null;
+    return a;
+}
+
+// Arrays.copyOf
+public static <T> T[] copyOf(T[] original, int newLength) {
+    return (T[]) copyOf(original, newLength, original.getClass);
+}
+
+// Arrays.copyOf
+public static <T, U> T[] copyOf(U[] original, int newLength, Class<? extends T[]> newType) {
+    // class对象也可以类型转换，数组是协变的，注意！
+    // 如果newType是Object[],创建Object的数组，否则
+    T[] copy = ((Object)newType == (Object)Object[].class)
+        ? (T[]) new Object[newLength]
+        // getComponentType获得数组的Class对象，然后用newInstance创建新的数组对象
+        : (T[]) Array.newInstance(newType.getComponentType(), newLength);
+    // 完成数组的拷贝
+    System.arraycopy(original, 0, copy, 0,
+                     Math.min(original.length, newLength));
+    return copy;   
+}
+
+```
+
